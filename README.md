@@ -1,6 +1,10 @@
 # my-harness
 
-> 一个单文件仓库：`AgentInstall.md` 即全部内容。它是一份自包含的 **AI 协作体系安装说明书**——「harness」指为 AI 协作装上的「护栏与约束体系」。对 AI 说「执行 AgentInstall」，即可为任意项目按需、非破坏性地安装这套体系。
+> 一个单核心分发文件的仓库：`AgentInstall.md` 是唯一需要交给 AI 的安装说明书；README 与安装 fixtures 只服务于维护和验收。它是一份自包含的 **AI 协作体系安装说明书**——「harness」指为 AI 协作装上的「护栏与约束体系」。对 AI 说「执行 AgentInstall」，即可为任意项目按需、非破坏性地安装这套体系。
+
+当前模板版本：`0.4.0`
+
+[![Verify AgentInstall](https://github.com/redhong729/my-harness/actions/workflows/verify.yml/badge.svg)](https://github.com/redhong729/my-harness/actions/workflows/verify.yml)
 
 [English](./README.en.md)
 
@@ -17,6 +21,8 @@
 - [影响与风险](#影响与风险)
 - [收益](#收益)
 - [落地步骤](#落地步骤)
+- [安装 Fixtures](#安装-fixtures)
+- [自动验证](#自动验证)
 - [附录](#附录)
 
 ---
@@ -59,6 +65,9 @@ AI 编程助手已深度参与日常开发，但其行为高度依赖项目内�
 | 非破坏 | 安装前后 diff 只出现「新增 / 追加」，无覆盖、无删除 |
 | 行为收敛 | 安装后 AI 遇到高副作用操作（push / 发布 / 删数据等）会先请求确认 |
 | 交付可信 | AI 交付时带可观察证据（测试 / 构建 / 截图），未执行项标 STALE / NOT RUN |
+| 模板等级一致 | L1 无安装占位符且新文件逐字一致；L2 无注册变量残留；L3 有重写依据与验证证据 |
+| 安装可追溯 | 每次有效安装记录模板版本、能力、Profile、来源 SHA-256 和产物 SHA-256 |
+| 场景可验收 | 空仓库、Node 前端、Java 后端、已有 `AGENTS.md` 四类 fixture 均有固定输入、回答与预期结果 |
 
 ### 非目标
 
@@ -69,40 +78,49 @@ AI 编程助手已深度参与日常开发，但其行为高度依赖项目内�
 
 ## 核心策略
 
-1. **自包含单文件**：`AgentInstall.md` 自带全部模板（附录 A–R），不依赖外部仓库。
+1. **自包含单文件**：`AgentInstall.md` 自带全部模板（附录 A–S），不依赖外部仓库。
 2. **非破坏性三原则**：文件不存在 → 新建；已存在 → 只补充不覆盖；不破坏原项目。
-3. **对话式按需安装**：基础 4 项直接装，可选能力逐个问，任务型 Skill 首次出现时临时装。
-4. **三级模板**：L1 原样使用 / L2 占位符替换 / L3 参考重写，兼顾通用性与项目定制。
-5. **分层架构**：协议（`AGENTS.md`）→ 任务路由（`docs/ai/README.md`）→ 硬约束（`project-constraints.md`）→ 交付（`handoff-delivery.md`）→ 可执行护栏（`scripts/harness/`）。
-6. **占位符推断 + 报告依据**：模板中的 `<STACK>`、`<BUILD_CMD>`、`<LINT_CMD>`、`<TEST_CMD>`、`<PROTECTED_BRANCHES>` 等由 AI 推断并说明依据，用户可纠正；项目无对应工具时标 `N/A`，不阻塞。
+3. **对话式按需安装**：先只读扫描并收集全部可选能力选择，再一次执行完整计划；任务型 Skill 首次出现且安装来源可用时临时装。
+4. **三级模板契约**：L1 零安装占位符、逐字复制；L2 只替换注册变量并执行明确的确定性选择；L3 必须基于项目证据重写和验证，禁止原样安装。
+5. **分层架构**：协议（`AGENTS.md`）→ 任务路由（`docs/ai/README.md`）→ 通用硬约束（`project-constraints.md`）+ 项目 Profile（`docs/ai/profiles/`）→ 交付（`handoff-delivery.md`）→ 可执行护栏（`scripts/harness/`）。
+6. **占位符推断 + 报告依据**：模板中的 `<STACK>`、`<BUILD_CMD>`、`<LINT_CMD>`、`<TEST_CMD>`、`<PRECHECK_CMD>`、`<PROTECTED_BRANCHES>` 等由 AI 推断并说明依据，用户可纠正；项目无对应工具时标 `N/A`，不阻塞。
+7. **可执行 Harness + 追加式状态**：具备 Node.js 18+ 运行时的项目可安装零第三方依赖的 preflight、自测和 run-log；所有项目用 JSONL 追加记录版本、能力和内容校验值。
+8. **安装场景矩阵**：四类机器可读 fixture 固定项目证据、用户回答和预期结果，覆盖最小安装、前后端 Profile 推断与存量冲突保护。
+9. **零依赖自动验证**：Node.js 18+ 测试会检查模板闭包、Markdown、本地引用、四场景安装、状态关系、二次安装零 diff 与嵌入 Harness 自测。
 
 ## 安装清单
 
-### 基础 4 项（任何项目都装）
+### 基础 5 类（任何项目都纳入完整计划）
 
 | 目标 | 说明 |
 | --- | --- |
 | `AGENTS.md` | 协议骨架（7 节） |
 | `docs/ai/README.md` | 任务路由表 |
-| `docs/ai/project-constraints.md` | 项目硬约束 |
+| `docs/ai/project-constraints.md` + `docs/ai/profiles/{适用类型}.md` | 通用硬约束 + 至少一个项目 Profile |
 | `docs/ai/skills/handoff-delivery.md` | 交付说明模板 |
+| `docs/ai/agentinstall-state.jsonl` | 追加式安装状态、能力和内容校验值 |
+
+> Profile 根据可观察证据选择 `frontend`、`backend`、`mobile`、`general`；全栈或 monorepo 可安装多个。基础安装完成时，缺失的必读本地引用必须为 0。
 
 ### 可选能力（向导询问，答「是」才装）
 
-自动化测试、提交前审查、前端组件 / 后端模块复用治理、旧项目功能迁移、改动留痕、自动检查护栏、Skill 索引。
+自动化测试、提交前审查、前端组件 / 后端模块复用治理、旧项目功能迁移、改动留痕、自动检查护栏、Skill 索引。其中自动检查护栏提供 Node.js 18+ 零第三方依赖的真实脚本；运行时不满足则明确跳过。
 
 ### 按需 Skill（任务首次出现时装）
 
-需求分析、Bug 修复、重构、调查 / 分析、新增页面。
+需求分析、Bug 修复、重构、调查 / 分析、新增页面。按需安装要求当前上下文仍提供完整 `AgentInstall.md`，否则继续基础路由并请用户重新提供安装文件，不自行联网取模板。
 
 ## 影响与风险
 
 ### 影响
 
-- 目标项目会新增 `AGENTS.md`、`docs/ai/` 等文档结构。
+- 目标项目会新增 `AGENTS.md`、`docs/ai/` 等文档结构，以及追加式安装状态文件。
+- 选择自动检查护栏时会新增 `scripts/harness/`；运行产生的 `.harness-logs/` 默认加入 `.gitignore`。
 - 安装后 AI 的后续行为受 `AGENTS.md` 约束（如高副作用操作需用户确认、交付需证据）。
 - 对现有工作流有要求：AI 会先读协议再动手，可能对某些请求说「不」或请求确认。
 - 这些文档需要持续维护，否则会与现实脱节、失去约束力。
+- `fixtures/` 仅用于维护者验收，不复制到目标项目，也不成为 `AgentInstall.md` 的外部依赖。
+- `package.json` 与 `test/` 仅用于本仓库维护验证，不属于分发物。
 
 ### 风险与应对
 
@@ -110,6 +128,12 @@ AI 编程助手已深度参与日常开发，但其行为高度依赖项目内�
 | --- | --- | --- |
 | 与已有文档内容冲突 | 存量项目已有 `AGENTS.md` 等 | 只补充不覆盖；冲突时暂停并询问用户 |
 | 占位符推断不准 | 技术栈 / 命令靠 AI 猜测 | 报告推断依据，用户可纠正；无对应工具标 `N/A` 不阻塞 |
+| 必读文档或能力未安装 | 基础模板引用可选文件 | 只强制引用实际存在或本次创建的文件；安装后执行依赖闭环检查 |
+| 项目类型误判 | 多端、全栈或 monorepo | 按依赖、目录和构建目标选择一个或多个 Profile，并报告依据 |
+| 模板等级被误用 | 改写 L1、漏填 L2 或原样复制 L3 | 使用唯一等级清单；安装后分别检查逐字一致、变量残留和重写证据 |
+| Harness 运行时不可用 | 项目没有 Node.js 18+ | 跳过该可选能力并报告，不联网安装依赖、不创建空壳脚本 |
+| 状态校验值发生漂移 | 安装后文件被人工或工具修改 | 只报告漂移并追加新快照；校验值不授权覆盖或回滚用户内容 |
+| Fixture 与模板漂移 | 修改安装规则后未同步场景预期 | 四个 `fixture.json` 必须随模板版本一起复核，动态哈希和时间不写死 |
 | 约束过重、流程僵化 | 全套能力被默认装上 | 可选能力「答是才装」；按需触发，不强制 |
 | 用户不理解安装内容 | 非技术用户 / 首次接触 | 全程对话式引导，完成后输出安装详情 |
 
@@ -133,11 +157,37 @@ AI 编程助手已深度参与日常开发，但其行为高度依赖项目内�
    > 「执行 AgentInstall」是约定的中文触发词，不翻译。
 
 3. AI 自动判断项目类型并引导安装：
-   - **新项目**：先装 4 个基础文件，再逐个询问可选能力。
-   - **存量项目**：先扫描现有文档，给出分析，确认后执行。
-4. 安装完成后，AI 输出「安装详情说明」（新建 / 归纳 / 跳过 / 冲突）。
-5. 按需纠正占位符推断值（技术栈、构建 / 检查 / 测试命令、保护分支）。
-6. **验证生效**：让 AI 走一次任务路由或做一次交付，确认它会先读协议、按约束执行、带证据交付。
+   - **新项目**：先只读扫描、补齐必填值并逐个收集可选能力选择，再执行完整计划。
+   - **存量项目**：先只读扫描并展示含全部目标和冲突判定的完整计划，确认后执行。
+4. AI 先完成 Harness（如选择）和其他产物，再做闭环验证，最后写安装状态；写入前冲突必须保持零写入。
+5. 流程结束后，AI 输出「安装详情说明」（新建 / 归纳 / 跳过 / 冲突 / Profile 依据 / 依赖闭环 / 模板等级验收 / 状态快照）；阻断也必须报告。
+6. 按需纠正占位符推断值（技术栈、构建 / 检查 / 测试命令、保护分支）。纠正会启动新一轮预检和状态快照，不修改历史记录。
+7. **验证生效**：让 AI 走一次任务路由或做一次交付，确认它会先读协议、按约束执行、带证据交付。
+
+## 安装 Fixtures
+
+[`fixtures/README.md`](./fixtures/README.md) 定义了四套可复现的目标仓库：
+
+| Fixture | 项目证据 | 主要预期 |
+| ------- | -------- | -------- |
+| `empty-repository` | 无 manifest、源码或 AI 文档 | 询问缺失身份信息，安装 `general` Profile |
+| `node-frontend` | React、TypeScript、Vite 与 npm scripts | 安装 `frontend` Profile，推断 build/lint/test 命令 |
+| `java-backend` | Java 17、Maven、JDK HTTP 服务 | 安装 `backend` Profile，lint 明确降级为 `N/A` |
+| `existing-agents` | 已有允许 AI 直推 `main` 的 `AGENTS.md` | 安装前零写入；报告冲突并 BLOCK，原文件逐字不变 |
+
+每套 fixture 的 `fixture.json` 都固定输入文件清单、用户回答、Profile 证据、占位符预期、产物集合、能力集合、冲突和重跑行为。安装 ID、时间与 SHA-256 等动态字段只验证规则，不写死具体值。
+
+## 自动验证
+
+仓库提供 Node.js 18+、零第三方依赖的回归测试：
+
+```bash
+npm test
+```
+
+`.github/workflows/verify.yml` 会在 push、Pull Request 和手动触发时，分别使用 Node.js 18 与 24 执行同一命令；工作流只有 `contents: read` 权限，不持久化 checkout 凭据，不启用包管理器缓存，并把官方 Actions 固定到已核对的完整 commit SHA。
+
+测试会验证 17 个占位符的注册闭包、19 个 L1 / 9 个 L2 模板、Markdown 围栏和本地链接；随后把四类 fixture 安装到隔离临时目录，检查输入逐字保留、必读引用、状态 SHA-256 与 `artifacts` 关系，并证明第二次安装全文件零 diff、JSONL 不追加。最后还会提取附录 N 的真实脚本与 `.gitignore` 条目，运行其自测与 preflight，覆盖符号链接逃逸、重复 `runId`、特殊 Git 文件名和误分类回归。
 
 ## 附录
 
@@ -145,9 +195,22 @@ AI 编程助手已深度参与日常开发，但其行为高度依赖项目内�
 
 ```
 .
-├── AgentInstall.md   # 安装说明书（唯一核心文件，自包含全部模板）
-├── README.md         # 本文档（中文）
-└── README.en.md      # English version
+├── .github/
+│   └── workflows/verify.yml       # push / PR / 手动触发的持续验证
+├── fixtures/                      # 四类安装输入与预期
+│   ├── empty-repository/
+│   ├── existing-agents/
+│   ├── java-backend/
+│   ├── node-frontend/
+│   ├── index.json
+│   ├── README.md
+│   └── README.en.md
+├── test/
+│   └── agentinstall.test.cjs      # 第 8 项自动验证与参考安装器
+├── AgentInstall.md                # 唯一分发物，自包含全部模板
+├── package.json                   # Node.js 18+ 零依赖测试入口
+├── README.md                      # 本文档（中文）
+└── README.en.md                   # English version
 ```
 
 ### License

@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "id": "java-backend",
+  "projectState": "existing-without-ai-docs",
+  "description": "A Java 17 Maven project exposing a small JDK HTTP service.",
+  "inputFiles": [
+    "pom.xml",
+    "src/main/java/com/example/DemoApplication.java"
+  ],
+  "answers": {
+    "confirmProposedPlan": true,
+    "protectedBranches": [
+      "main"
+    ],
+    "optionalCapabilities": []
+  },
+  "expected": {
+    "requiresPlanConfirmation": true,
+    "writesBeforeConfirmation": [],
+    "profileEvidence": [
+      "pom.xml sets the Java release to 17 and identifies a Maven project.",
+      "DemoApplication.java starts an HTTP server and has no UI entry."
+    ],
+    "profiles": [
+      "backend"
+    ],
+    "placeholderValues": {
+      "PROJECT_NAME": "fixture-java-backend",
+      "PROJECT_SUMMARY": "Fixture Java HTTP backend for AgentInstall profile and command inference.",
+      "STACK": "Java 17 + Maven + JDK HttpServer",
+      "PLATFORMS": "JVM HTTP server",
+      "BUILD_CMD": "mvn -q -DskipTests package",
+      "LINT_CMD": "N/A",
+      "TEST_CMD": "mvn -q test",
+      "PRECHECK_CMD": "N/A",
+      "PROTECTED_BRANCHES": "main",
+      "TEMPLATE_VERSION": "0.4.0"
+    },
+    "createdFiles": [
+      "AGENTS.md",
+      "docs/ai/README.md",
+      "docs/ai/agentinstall-state.jsonl",
+      "docs/ai/profiles/backend.md",
+      "docs/ai/project-constraints.md",
+      "docs/ai/skills/handoff-delivery.md"
+    ],
+    "preservedByteForByte": [
+      "pom.xml",
+      "src/main/java/com/example/DemoApplication.java"
+    ],
+    "capabilities": [
+      "handoff-delivery",
+      "install-state",
+      "profile:backend",
+      "project-constraints",
+      "protocol",
+      "task-routing"
+    ],
+    "conflicts": [],
+    "missingRequiredReferences": 0,
+    "status": "completed",
+    "stateRecord": "append-one-valid-line",
+    "rerun": {
+      "artifactContentDiff": "empty",
+      "stateRecordAppend": false
+    }
+  }
+}

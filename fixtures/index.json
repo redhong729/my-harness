@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "fixtures": [
+    "empty-repository",
+    "existing-agents",
+    "java-backend",
+    "node-frontend"
+  ]
+}

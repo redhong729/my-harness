@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "existing-agents",
+  "projectState": "existing-with-ai-docs",
+  "description": "An existing documentation project whose AGENTS.md permits direct pushes to main.",
+  "inputFiles": [
+    "AGENTS.md",
+    "README.md"
+  ],
+  "answers": {
+    "confirmProposedPlan": true,
+    "conflictResolution": "stop-without-modifying",
+    "protectedBranches": [
+      "main"
+    ],
+    "optionalCapabilities": []
+  },
+  "expected": {
+    "requiresPlanConfirmation": true,
+    "writesBeforeConfirmation": [],
+    "profileEvidence": [
+      "No language manifest or source tree exists; use the general fallback profile."
+    ],
+    "proposedProfiles": [
+      "general"
+    ],
+    "profiles": [],
+    "placeholderValues": {
+      "PROJECT_NAME": "fixture-existing-agents",
+      "PROJECT_SUMMARY": "Existing documentation repository used to verify non-destructive conflict handling.",
+      "STACK": "Docs only",
+      "PLATFORMS": "N/A",
+      "BUILD_CMD": "N/A",
+      "LINT_CMD": "N/A",
+      "TEST_CMD": "N/A",
+      "PRECHECK_CMD": "N/A",
+      "PROTECTED_BRANCHES": "main",
+      "TEMPLATE_VERSION": "0.4.0"
+    },
+    "createdFiles": [],
+    "preservedByteForByte": [
+      "AGENTS.md",
+      "README.md"
+    ],
+    "capabilities": [],
+    "conflicts": [
+      {
+        "path": "AGENTS.md",
+        "existingRule": "AI may push directly to main without asking after local checks pass.",
+        "templateRule": "High-side-effect operations require user confirmation and protected branches must not be pushed directly.",
+        "requiredAction": "Report the conflict and stop without modifying any file."
+      }
+    ],
+    "missingRequiredReferences": null,
+    "status": "blocked",
+    "stateRecord": "not-created-before-conflict-resolution"
+  }
+}

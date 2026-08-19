@@ -1,0 +1,23 @@
+{
+  "name": "fixture-node-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fixture React frontend for AgentInstall profile and command inference.",
+  "packageManager": "npm@10.9.8",
+  "scripts": {
+    "build": "vite build",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "react": "*",
+    "react-dom": "*"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "*",
+    "eslint": "*",
+    "typescript": "*",
+    "vite": "*",
+    "vitest": "*"
+  }
+}

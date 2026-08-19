@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "empty-repository",
+  "projectState": "empty",
+  "description": "A truly empty Git repository with no manifest, source file, or existing AI documentation.",
+  "inputFiles": [],
+  "answers": {
+    "projectName": "fixture-empty-repository",
+    "projectSummary": "Empty repository used to validate the minimum safe AgentInstall setup.",
+    "protectedBranches": [
+      "main"
+    ],
+    "optionalCapabilities": []
+  },
+  "expected": {
+    "requiresPlanConfirmation": false,
+    "profileEvidence": [
+      "No language manifest or source tree exists; use the general fallback profile."
+    ],
+    "profiles": [
+      "general"
+    ],
+    "placeholderValues": {
+      "PROJECT_NAME": "fixture-empty-repository",
+      "PROJECT_SUMMARY": "Empty repository used to validate the minimum safe AgentInstall setup.",
+      "STACK": "Docs only",
+      "PLATFORMS": "N/A",
+      "BUILD_CMD": "N/A",
+      "LINT_CMD": "N/A",
+      "TEST_CMD": "N/A",
+      "PRECHECK_CMD": "N/A",
+      "PROTECTED_BRANCHES": "main",
+      "TEMPLATE_VERSION": "0.4.0"
+    },
+    "createdFiles": [
+      "AGENTS.md",
+      "docs/ai/README.md",
+      "docs/ai/agentinstall-state.jsonl",
+      "docs/ai/profiles/general.md",
+      "docs/ai/project-constraints.md",
+      "docs/ai/skills/handoff-delivery.md"
+    ],
+    "preservedByteForByte": [],
+    "capabilities": [
+      "handoff-delivery",
+      "install-state",
+      "profile:general",
+      "project-constraints",
+      "protocol",
+      "task-routing"
+    ],
+    "conflicts": [],
+    "missingRequiredReferences": 0,
+    "status": "completed",
+    "stateRecord": "append-one-valid-line",
+    "rerun": {
+      "artifactContentDiff": "empty",
+      "stateRecordAppend": false
+    }
+  }
+}

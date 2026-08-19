@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "id": "node-frontend",
+  "projectState": "existing-without-ai-docs",
+  "description": "A small React, TypeScript, and Vite frontend with deterministic npm scripts.",
+  "inputFiles": [
+    "package.json",
+    "src/App.tsx",
+    "vite.config.ts"
+  ],
+  "answers": {
+    "confirmProposedPlan": true,
+    "protectedBranches": [
+      "main"
+    ],
+    "optionalCapabilities": []
+  },
+  "expected": {
+    "requiresPlanConfirmation": true,
+    "writesBeforeConfirmation": [],
+    "profileEvidence": [
+      "package.json declares React, TypeScript, and Vite.",
+      "src/App.tsx contains a browser UI component.",
+      "vite.config.ts defines the frontend build entry."
+    ],
+    "profiles": [
+      "frontend"
+    ],
+    "placeholderValues": {
+      "PROJECT_NAME": "fixture-node-frontend",
+      "PROJECT_SUMMARY": "Fixture React frontend for AgentInstall profile and command inference.",
+      "STACK": "Node.js + TypeScript + React + Vite",
+      "PLATFORMS": "Web",
+      "BUILD_CMD": "npm run build",
+      "LINT_CMD": "npm run lint",
+      "TEST_CMD": "npm test",
+      "PRECHECK_CMD": "N/A",
+      "PROTECTED_BRANCHES": "main",
+      "TEMPLATE_VERSION": "0.4.0"
+    },
+    "createdFiles": [
+      "AGENTS.md",
+      "docs/ai/README.md",
+      "docs/ai/agentinstall-state.jsonl",
+      "docs/ai/profiles/frontend.md",
+      "docs/ai/project-constraints.md",
+      "docs/ai/skills/handoff-delivery.md"
+    ],
+    "preservedByteForByte": [
+      "package.json",
+      "src/App.tsx",
+      "vite.config.ts"
+    ],
+    "capabilities": [
+      "handoff-delivery",
+      "install-state",
+      "profile:frontend",
+      "project-constraints",
+      "protocol",
+      "task-routing"
+    ],
+    "conflicts": [],
+    "missingRequiredReferences": 0,
+    "status": "completed",
+    "stateRecord": "append-one-valid-line",
+    "rerun": {
+      "artifactContentDiff": "empty",
+      "stateRecordAppend": false
+    }
+  }
+}

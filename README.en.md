@@ -1,6 +1,10 @@
 # my-harness
 
-> A single-file repository: `AgentInstall.md` is its entire content. It is a self-contained **AI collaboration system installation guide** — "harness" refers to the guardrails-and-constraints system installed for AI collaboration. Say "执行 AgentInstall" to an AI, and it will install this system into any project on demand and non-destructively.
+> A repository with one core distribution file: `AgentInstall.md` is the only file given to an AI; the READMEs and installation fixtures exist only for maintenance and verification. It is a self-contained **AI collaboration system installation guide** — "harness" refers to the guardrails-and-constraints system installed for AI collaboration. Say "执行 AgentInstall" to an AI, and it will install this system into any project on demand and non-destructively.
+
+Current template version: `0.4.0`
+
+[![Verify AgentInstall](https://github.com/redhong729/my-harness/actions/workflows/verify.yml/badge.svg)](https://github.com/redhong729/my-harness/actions/workflows/verify.yml)
 
 [中文](./README.md)
 
@@ -17,6 +21,8 @@
 - [Impact and Risks](#impact-and-risks)
 - [Benefits](#benefits)
 - [Rollout Steps](#rollout-steps)
+- [Installation Fixtures](#installation-fixtures)
+- [Automated Verification](#automated-verification)
 - [Appendix](#appendix)
 
 ---
@@ -59,6 +65,9 @@ The state above directly leads to:
 | Non-destructive | The before/after diff shows only additions; no overwrites or deletions |
 | Behavior convergence | After install, the AI asks for confirmation before high-side-effect operations (push / deploy / data deletion, etc.) |
 | Trustworthy delivery | The AI delivers with observable evidence (tests / build / screenshots); unrun items are marked STALE / NOT RUN |
+| Consistent template levels | L1 has no install placeholders and new files match verbatim; L2 leaves no registered variables; L3 includes rewrite rationale and verification evidence |
+| Traceable installation | Every effective install records the template version, capabilities, profiles, source SHA-256, and artifact SHA-256 values |
+| Verifiable scenarios | Empty repository, Node frontend, Java backend, and existing-`AGENTS.md` fixtures each define fixed inputs, answers, and expected results |
 
 ### Non-Goals
 
@@ -69,40 +78,49 @@ The state above directly leads to:
 
 ## Core Strategy
 
-1. **Self-contained single file**: `AgentInstall.md` carries all templates (appendices A–R), with no external repository dependency.
+1. **Self-contained single file**: `AgentInstall.md` carries all templates (appendices A–S), with no external repository dependency.
 2. **Three non-destructive principles**: file missing → create; file exists → supplement only, never overwrite; never break the target project.
-3. **Conversational, on-demand install**: the 4 base files install directly, optional capabilities are asked one by one, and task skills install on first use.
-4. **Three-level templates**: L1 use as-is / L2 replace placeholders / L3 rewrite as reference — balancing generality and per-project customization.
-5. **Layered architecture**: protocol (`AGENTS.md`) → task routing (`docs/ai/README.md`) → hard constraints (`project-constraints.md`) → delivery (`handoff-delivery.md`) → executable guardrails (`scripts/harness/`).
-6. **Placeholder inference with reported basis**: placeholders such as `<STACK>`, `<BUILD_CMD>`, `<LINT_CMD>`, `<TEST_CMD>`, and `<PROTECTED_BRANCHES>` are inferred by the AI with rationale; users can correct them. When a project lacks a tool, the placeholder is marked `N/A` (non-blocking).
+3. **Conversational, on-demand install**: perform a read-only scan and collect every optional choice first, then execute one complete plan; task skills install on first use only while a trusted installation source is available.
+4. **Three-level template contract**: L1 has no install-time placeholders and is copied verbatim; L2 only replaces registered variables and performs explicit deterministic selections; L3 must be rewritten and verified from project evidence and may never be installed verbatim.
+5. **Layered architecture**: protocol (`AGENTS.md`) → task routing (`docs/ai/README.md`) → common constraints (`project-constraints.md`) + project profiles (`docs/ai/profiles/`) → delivery (`handoff-delivery.md`) → executable guardrails (`scripts/harness/`).
+6. **Placeholder inference with reported basis**: placeholders such as `<STACK>`, `<BUILD_CMD>`, `<LINT_CMD>`, `<TEST_CMD>`, `<PRECHECK_CMD>`, and `<PROTECTED_BRANCHES>` are inferred by the AI with rationale; users can correct them. When a project lacks a tool, the placeholder is marked `N/A` (non-blocking).
+7. **Executable Harness + append-only state**: projects with Node.js 18+ can install zero-third-party-dependency preflight, self-test, and run-log scripts; every project records versions, capabilities, and content checksums in JSONL.
+8. **Installation scenario matrix**: four machine-readable fixtures pin project evidence, user answers, and expected results, covering minimum installation, frontend/backend profile inference, and non-destructive legacy conflict handling.
+9. **Zero-dependency automated verification**: Node.js 18+ tests cover template closure, Markdown, local references, four installation scenarios, state relationships, zero-diff reruns, and the embedded Harness self-test.
 
 ## Install Checklist
 
-### Base 4 items (installed for any project)
+### Base 5 categories (included in every complete plan)
 
 | Target | Description |
 | --- | --- |
 | `AGENTS.md` | Protocol skeleton (7 sections) |
 | `docs/ai/README.md` | Task routing table |
-| `docs/ai/project-constraints.md` | Project hard constraints |
+| `docs/ai/project-constraints.md` + `docs/ai/profiles/{applicable-type}.md` | Common constraints + at least one project profile |
 | `docs/ai/skills/handoff-delivery.md` | Delivery note template |
+| `docs/ai/agentinstall-state.jsonl` | Append-only install state, capabilities, and content checksums |
+
+> Profiles are selected from `frontend`, `backend`, `mobile`, and `general` using observable evidence; full-stack projects and monorepos may install more than one. After the base install, the count of missing mandatory local references must be zero.
 
 ### Optional capabilities (asked in the wizard; installed only on "yes")
 
-Automated testing, preflight review, frontend component / backend module reuse governance, legacy feature migration, change tracking, automated check guardrails, skill index.
+Automated testing, preflight review, frontend component / backend module reuse governance, legacy feature migration, change tracking, automated check guardrails, skill index. The automated guardrails include real zero-third-party-dependency scripts for Node.js 18+; unsupported runtimes are explicitly skipped.
 
 ### On-demand skills (installed on first occurrence)
 
-Requirement analysis, bug fixing, refactoring, investigation / analysis, adding a page.
+Requirement analysis, bug fixing, refactoring, investigation / analysis, adding a page. On-demand installation requires a complete `AgentInstall.md` in the current trusted context; otherwise, continue with base routing and ask the user to provide the installer again instead of fetching a template from the network.
 
 ## Impact and Risks
 
 ### Impact
 
-- The target project gains new doc structures such as `AGENTS.md` and `docs/ai/`.
+- The target project gains new doc structures such as `AGENTS.md` and `docs/ai/`, plus an append-only installation state file.
+- Selecting automated guardrails adds `scripts/harness/`; generated `.harness-logs/` is added to `.gitignore` by default.
 - After install, the AI's subsequent behavior is constrained by `AGENTS.md` (e.g. high-side-effect operations require confirmation, delivery requires evidence).
 - The existing workflow is affected: the AI reads the protocol before acting, and may say "no" or ask for confirmation on certain requests.
 - These docs require ongoing maintenance; otherwise they drift from reality and lose their binding force.
+- `fixtures/` is only a maintainer verification asset; it is never copied into target projects and is not an external dependency of `AgentInstall.md`.
+- `package.json` and `test/` are repository-maintenance checks only and are not distribution artifacts.
 
 ### Risks and Responses
 
@@ -110,6 +128,12 @@ Requirement analysis, bug fixing, refactoring, investigation / analysis, adding 
 | --- | --- | --- |
 | Conflicts with existing docs | Existing project already has `AGENTS.md` etc. | Supplement only, never overwrite; pause and ask on conflict |
 | Inaccurate placeholder inference | Tech stack / commands are guessed by the AI | Report the inference basis; users can correct; mark `N/A` when no tool exists |
+| Mandatory docs or capabilities are absent | A base template references an optional file | Require only files that already exist or are created in this install; run a dependency-closure check afterward |
+| Project type is misclassified | Multi-platform, full-stack, or monorepo project | Select one or more profiles from dependencies, directories, and build targets, and report the evidence |
+| A template level is misused | L1 is rewritten, L2 variables remain, or L3 is copied verbatim | Use the single level manifest; validate verbatim equality, variable residue, and rewrite evidence after installation |
+| Harness runtime is unavailable | The project has no Node.js 18+ runtime | Skip the optional capability and report it; do not download dependencies or create stub scripts |
+| State checksums drift | A person or tool changes files after installation | Report drift and append a new snapshot only; checksums never authorize overwriting or rollback |
+| Fixtures drift from the template | Installation rules change without updating scenario expectations | Review all four `fixture.json` files with each template version; never hard-code dynamic hashes or timestamps |
 | Overly heavy constraints / rigid process | Full capability set installed by default | Optional capabilities install only on "yes"; triggered on demand, never forced |
 | User doesn't understand what's installed | Non-technical users / first contact | Conversational guidance throughout, with an install report at the end |
 
@@ -133,11 +157,37 @@ Requirement analysis, bug fixing, refactoring, investigation / analysis, adding 
    > "执行 AgentInstall" is the agreed Chinese trigger phrase and is not translated.
 
 3. The AI detects the project type and guides the install:
-   - **New project**: install the 4 base files first, then ask about optional capabilities one by one.
-   - **Existing project**: scan existing docs first, present an analysis, then execute after confirmation.
-4. When done, the AI outputs an "Installation Details" report (created / supplemented / skipped / conflicts).
-5. Correct the inferred placeholders as needed (tech stack, build / lint / test commands, protected branches).
-6. **Verify it works**: have the AI run one task routing or one delivery; confirm it reads the protocol first, follows constraints, and delivers with evidence.
+   - **New project**: read-only scan first, fill required facts, and collect every optional choice before executing the complete plan.
+   - **Existing project**: read-only scan first, present a complete plan with every target and collision decision, then execute after confirmation.
+4. The AI completes the Harness first when selected, writes other artifacts, runs closure checks, and writes installation state last; a pre-write conflict must leave the repository unchanged.
+5. At the end, the AI outputs an "Installation Details" report (created / supplemented / skipped / conflicts / profile rationale / dependency closure / template-level validation / state snapshot), including blocked outcomes.
+6. Correct inferred placeholders as needed (tech stack, build / lint / test commands, protected branches). A correction starts a new preflight and snapshot rather than editing history.
+7. **Verify it works**: have the AI run one task routing or one delivery; confirm it reads the protocol first, follows constraints, and delivers with evidence.
+
+## Installation Fixtures
+
+[`fixtures/README.en.md`](./fixtures/README.en.md) defines four reproducible target repositories:
+
+| Fixture | Project evidence | Primary expectation |
+| ------- | ---------------- | ------------------- |
+| `empty-repository` | No manifest, source, or AI documentation | Ask for missing identity values and install the `general` profile |
+| `node-frontend` | React, TypeScript, Vite, and npm scripts | Install the `frontend` profile and infer build/lint/test commands |
+| `java-backend` | Java 17, Maven, and a JDK HTTP service | Install the `backend` profile and explicitly degrade lint to `N/A` |
+| `existing-agents` | An existing `AGENTS.md` allows the AI to push directly to `main` | Make zero writes before installation; report the conflict and BLOCK while preserving the original bytes |
+
+Each fixture's `fixture.json` pins its input file list, user answers, profile evidence, expected placeholders, artifact set, capability set, conflicts, and rerun behavior. Dynamic fields such as installation IDs, timestamps, and SHA-256 values are validated by rule rather than hard-coded.
+
+## Automated Verification
+
+The repository includes a zero-third-party-dependency regression suite for Node.js 18+:
+
+```bash
+npm test
+```
+
+`.github/workflows/verify.yml` runs the same command on Node.js 18 and 24 for pushes, pull requests, and manual dispatches. The workflow has only `contents: read`, does not persist checkout credentials, disables package-manager caching, and pins the verified official Actions to full commit SHAs.
+
+It verifies the 17-token registry closure, 19 L1 and 9 L2 templates, Markdown fences, and local links. It then installs all four fixtures into isolated temporary directories, checks byte-preserved inputs, mandatory references, state SHA-256 values and the `artifacts` relationship, and proves that a second install produces no file diff and appends no JSONL record. Finally, it extracts the real Appendix N scripts and `.gitignore` entry and runs their self-test and preflight, including regressions for symlink escape, duplicate `runId`, unusual Git filenames, and false classification.
 
 ## Appendix
 
@@ -145,9 +195,22 @@ Requirement analysis, bug fixing, refactoring, investigation / analysis, adding 
 
 ```
 .
-├── AgentInstall.md   # Installation guide (the single core file, self-contained with all templates)
-├── README.md         # This document (Chinese)
-└── README.en.md      # English version
+├── .github/
+│   └── workflows/verify.yml       # Continuous push / PR / manual verification
+├── fixtures/                      # Four installation inputs and expectations
+│   ├── empty-repository/
+│   ├── existing-agents/
+│   ├── java-backend/
+│   ├── node-frontend/
+│   ├── index.json
+│   ├── README.md
+│   └── README.en.md
+├── test/
+│   └── agentinstall.test.cjs      # Item 8 checks and reference installer
+├── AgentInstall.md                # Only distribution artifact; contains all templates
+├── package.json                   # Node.js 18+ zero-dependency test entry point
+├── README.md                      # This document (Chinese)
+└── README.en.md                   # English version
 ```
 
 ### License

@@ -21,6 +21,7 @@ Current template version: `0.4.0`
 - [Impact and Risks](#impact-and-risks)
 - [Benefits](#benefits)
 - [Rollout Steps](#rollout-steps)
+- [Post-install Usage Scenarios](#post-install-usage-scenarios)
 - [Installation Fixtures](#installation-fixtures)
 - [Automated Verification](#automated-verification)
 - [Appendix](#appendix)
@@ -163,6 +164,34 @@ Requirement analysis, bug fixing, refactoring, investigation / analysis, adding 
 5. At the end, the AI outputs an "Installation Details" report (created / supplemented / skipped / conflicts / profile rationale / dependency closure / template-level validation / state snapshot), including blocked outcomes.
 6. Correct inferred placeholders as needed (tech stack, build / lint / test commands, protected branches). A correction starts a new preflight and snapshot rather than editing history.
 7. **Verify it works**: have the AI run one task routing or one delivery; confirm it reads the protocol first, follows constraints, and delivers with evidence.
+
+## Post-install Usage Scenarios
+
+After installation, you do not need to memorize a new command system. Describe work as usual. The AI first classifies the task through `AGENTS.md` and `docs/ai/README.md`, then loads only the constraints and skills needed for that task.
+
+| Scenario | Example request | Expected behavior after installation |
+| -------- | --------------- | ------------------------------------ |
+| Build a feature | "Add status filtering to the order list. Confirm the scope before implementation." | Classify it as a Feature; read existing acceptance or product material; confirm unclear scope; run checks matched to the change. |
+| Add a page | "Add an 'Order Detail' page in the business subpackage and wire up its route entry." | Classify it as the add-page scenario of a Feature; determine the owning directory and route registration; implement per coding conventions; run build for route/dependency changes and lint for source, and register in the component index when it exists. |
+| Fix a bug | "Fix duplicate submissions creating two orders and add a regression test." | Classify it as a Bug; locate the reproduction path and root cause; make the smallest fix; provide observable before/after evidence. |
+| Refactor safely | "Refactor payment state transitions without changing the API or existing behavior." | Classify it as a refactor; confirm current contracts and test protection; preserve behavior; report uncovered risks. |
+| Investigate | "Analyze the intermittent blank home page. Do not change code yet." | Classify it as an investigation; stay read-only; separate facts, inferences, and open checks; make no implementation change without authorization. |
+| Make a small change | "Change this button label to 'Resend'." | Read only nearby code and necessary constraints instead of the full documentation set; still run proportionate minimal verification. |
+| Query the project knowledge base | "Using the documents under `docs/`, tell me what restrictions apply to order cancellation and cite the sources." | Locate relevant material through the documentation index and read only what is needed; cite source paths; distinguish documented facts, code-derived inferences, and missing information; flag conflicting or potentially stale documentation. |
+| Reverse-engineer a PRD | "This project has no PRD. Derive one from the existing code without changing the code yet." | Extract implemented behavior from pages, routes, APIs, data models, and tests; clearly separate code facts, reasonable inferences, and open questions; require human confirmation before establishing the current project PRD. |
+| Consolidate multiple PRDs | "Merge these historical PRDs into the single current project PRD while preserving the iteration trail." | Compare requirements with the current code, identify duplicates, conflicts, and obsolete items; maintain one current PRD; preserve each iteration's sources, decisions, and changes without silent overwrites. |
+| Organize visual tokens | "Inventory the project's color, typography, spacing, radius, and shadow tokens and propose a cleanup plan first." | Route as read-only investigation (no dedicated skill); inventory definitions and actual usage; identify duplicate, near-duplicate, and inconsistently named values; propose canonical tokens and legacy mappings; make no bulk code replacement without confirmation. |
+| Govern component / module reuse | "I want to extract this dialog into a shared component. Judge whether it should be shared and update the index." | Scan real call sites first and advise keep-private / module-shared / publicize (≥2 modules); publicizing is a change, so state the basis and confirm first; update name, location, description, and usage in the reuse index when it exists. |
+| Migrate a legacy feature | "Migrate the 'Coupon' feature from the old repository into this project; assess before acting." | Classify it as a migration; run the migration precheck and confirm scope; extract evidence item by item and tag reuse / migrate / replace / out_of_scope; implement the minimal migration and confirm before changing shared contracts; verify behavior and equivalence afterward. |
+| Set up automated testing | "Set up a layered unit + E2E test gate for this project; propose a plan first." | Build the gate as test layers → runner wrappers → unified reports; reuse the existing language runtime, package manager, and test framework; use PASS / FAIL / STALE / NOT RUN semantics and never pass off stale results as passing. |
+| Run preflight | "This change is ready. Run a preflight review before I submit it." | Review the diff; run triggered lint / build / test, Profile checks, and the installed Harness; do not claim readiness while a BLOCK remains. |
+| Hand off to QA / product | "The feature is complete. Prepare an acceptance handoff for QA." | Use the `handoff-delivery` structure for completed items, requirement-to-case mapping, manual review points, and regression suggestions; mark anything not run. |
+| Commit and push repository changes | "Commit the current changes and push them to main." | Review the diff and run applicable checks before committing; request explicit confirmation before pushing or directly operating on a protected branch; do not commit or push while a BLOCK remains. |
+| Evolve capabilities later | "Here is AgentInstall again. Add or adjust automated testing and preflight review for this project." | Read the existing installation state, check drift and conflicts first, add or adjust only the selected capabilities, and append a snapshot only when stable state changes. |
+
+> "Component/module reuse governance", "legacy feature migration", and "automated testing" depend on optional capabilities, and "add a page" is an on-demand skill; their full behavior is available only when the capability is installed (or the task first occurs while a trusted install source is available). Otherwise the AI follows the base route, states what is missing, and does not treat it as a BLOCK.
+
+After installation, try at least one investigation, one preflight review, and one QA/product handoff. If project documentation is missing or fragmented, also try reverse-engineering or consolidating a PRD. Together these scenarios quickly confirm task routing, fact-versus-inference boundaries, verification gates, and evidence-based delivery.
 
 ## Installation Fixtures
 

@@ -176,12 +176,15 @@ After installation, you do not need to memorize a new command system. Describe w
 | Refactor safely | "Refactor payment state transitions without changing the API or existing behavior." | Classify it as a refactor; confirm current contracts and test protection; preserve behavior; report uncovered risks. |
 | Investigate | "Analyze the intermittent blank home page. Do not change code yet." | Classify it as an investigation; stay read-only; separate facts, inferences, and open checks; make no implementation change without authorization. |
 | Make a small change | "Change this button label to 'Resend'." | Read only nearby code and necessary constraints instead of the full documentation set; still run proportionate minimal verification. |
+| Reverse-engineer a PRD | "This project has no PRD. Derive one from the existing code without changing the code yet." | Extract implemented behavior from pages, routes, APIs, data models, and tests; clearly separate code facts, reasonable inferences, and open questions; require human confirmation before establishing the current project PRD. |
+| Consolidate multiple PRDs | "Merge these historical PRDs into the single current project PRD while preserving the iteration trail." | Compare requirements with the current code, identify duplicates, conflicts, and obsolete items; maintain one current PRD; preserve each iteration's sources, decisions, and changes without silent overwrites. |
+| Organize visual tokens | "Inventory the project's color, typography, spacing, radius, and shadow tokens and propose a cleanup plan first." | Inventory definitions and actual usage; identify duplicate, near-duplicate, and inconsistently named values; propose canonical tokens and legacy mappings; make no bulk code replacement without confirmation. |
 | Run preflight | "This change is ready. Run a preflight review before I submit it." | Review the diff; run triggered lint / build / test, Profile checks, and the installed Harness; do not claim readiness while a BLOCK remains. |
 | Hand off to QA / product | "The feature is complete. Prepare an acceptance handoff for QA." | Use the `handoff-delivery` structure for completed items, requirement-to-case mapping, manual review points, and regression suggestions; mark anything not run. |
 | Request a high-impact action | "Push this branch directly to main and release it." | Recognize push and release as high-impact actions, request explicit confirmation first, and follow protected-branch rules. |
 | Add capabilities later | "Here is AgentInstall again. Add automated testing and preflight review to this project." | Read the existing installation state, check drift and conflicts first, add only the selected capabilities, and append a snapshot only when stable state changes. |
 
-After installation, try at least one investigation, one preflight review, and one QA/product handoff. Together they quickly confirm that task routing, verification gates, and evidence-based delivery are actually active.
+After installation, try at least one investigation, one preflight review, and one QA/product handoff. If project documentation is missing or fragmented, also try reverse-engineering or consolidating a PRD. Together these scenarios quickly confirm task routing, fact-versus-inference boundaries, verification gates, and evidence-based delivery.
 
 ## Installation Fixtures
 

@@ -21,6 +21,7 @@ Current template version: `0.4.0`
 - [Impact and Risks](#impact-and-risks)
 - [Benefits](#benefits)
 - [Rollout Steps](#rollout-steps)
+- [Post-install Usage Scenarios](#post-install-usage-scenarios)
 - [Installation Fixtures](#installation-fixtures)
 - [Automated Verification](#automated-verification)
 - [Appendix](#appendix)
@@ -163,6 +164,24 @@ Requirement analysis, bug fixing, refactoring, investigation / analysis, adding 
 5. At the end, the AI outputs an "Installation Details" report (created / supplemented / skipped / conflicts / profile rationale / dependency closure / template-level validation / state snapshot), including blocked outcomes.
 6. Correct inferred placeholders as needed (tech stack, build / lint / test commands, protected branches). A correction starts a new preflight and snapshot rather than editing history.
 7. **Verify it works**: have the AI run one task routing or one delivery; confirm it reads the protocol first, follows constraints, and delivers with evidence.
+
+## Post-install Usage Scenarios
+
+After installation, you do not need to memorize a new command system. Describe work as usual. The AI first classifies the task through `AGENTS.md` and `docs/ai/README.md`, then loads only the constraints and skills needed for that task.
+
+| Scenario | Example request | Expected behavior after installation |
+| -------- | --------------- | ------------------------------------ |
+| Build a feature | "Add status filtering to the order list. Confirm the scope before implementation." | Classify it as a Feature; read existing acceptance or product material; confirm unclear scope; run checks matched to the change. |
+| Fix a bug | "Fix duplicate submissions creating two orders and add a regression test." | Classify it as a Bug; locate the reproduction path and root cause; make the smallest fix; provide observable before/after evidence. |
+| Refactor safely | "Refactor payment state transitions without changing the API or existing behavior." | Classify it as a refactor; confirm current contracts and test protection; preserve behavior; report uncovered risks. |
+| Investigate | "Analyze the intermittent blank home page. Do not change code yet." | Classify it as an investigation; stay read-only; separate facts, inferences, and open checks; make no implementation change without authorization. |
+| Make a mechanical edit | "Change this button label to 'Resend'." | Read only nearby code and necessary constraints instead of the full documentation set; still run proportionate minimal verification. |
+| Run preflight | "This change is ready. Run a preflight review before I submit it." | Review the diff; run triggered lint / build / test, Profile checks, and the installed Harness; do not claim readiness while a BLOCK remains. |
+| Hand off to QA / product | "The feature is complete. Prepare an acceptance handoff for QA." | Use the `handoff-delivery` structure for completed items, requirement-to-case mapping, manual review points, and regression suggestions; mark anything not run. |
+| Request a high-impact action | "Push this branch directly to main and release it." | Recognize push and release as high-impact actions, request explicit confirmation first, and follow protected-branch rules. |
+| Add capabilities later | "Here is AgentInstall again. Add automated testing and preflight review to this project." | Read the existing installation state, check drift and conflicts first, add only the selected capabilities, and append a snapshot only when stable state changes. |
+
+After installation, try at least one investigation, one preflight review, and one QA/product handoff. Together they quickly confirm that task routing, verification gates, and evidence-based delivery are actually active.
 
 ## Installation Fixtures
 
